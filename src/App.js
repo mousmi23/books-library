@@ -1,23 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import Nav from "./Nav/Nav";
+import List from "./List/List";
+import axios from "axios";
+import AddBooks from "./AddBooks/AddBooks";
 
 function App() {
+  let isLoading = true;
+  const [books, setBooks] = useState([]);
+
+  // const getBooks = async () => {
+  //   // const url = "http://localhost:3000/books";
+  //   const url = "https://manumitsacademy.github.io/books.json";
+
+  //   await axios.get(url).then((result) => setBooks(result.data));
+  // };
+
+  const url = "https://manumitsacademy.github.io/books.json";
+  const getBooks = async (url) => {
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      console.log(data);
+      // isLoading = false;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getBooks(url);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <>
+        <h1>....Loading</h1>
+      </>
+    );
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Nav />
+
+      <div className="app_body">
+        <List books={books} />
+        <AddBooks />
+      </div>
     </div>
   );
 }
